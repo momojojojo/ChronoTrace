@@ -230,6 +230,7 @@ Image ───────────────► Reverse Image Search API 
 | VRAM Requirement | ≤8GB | Fits P100/T4 GPUs |
 
 </div>
+
 ## 🚀 Installation
 
 1. Clone and enter the project
