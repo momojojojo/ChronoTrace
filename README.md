@@ -219,17 +219,17 @@ Image ───────────────► Reverse Image Search API 
                 └───────────────────────────────┘
 ```
 ## 🧪 Performance Targets
-<div style="text-align: center;">
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Temporal OOC F1 | ≥79% | Improves on COSMOS static baseline |
-| Patient-Zero Accuracy@3 | ≥70% | Practical for fact-checking workflows |
-| Generic Classifier F1 | ≥80% | Reduces false positives |
-| Training Time | ≤4 hours | Feasible on Kaggle/Colab GPUs |
-| VRAM Requirement | ≤8GB | Fits P100/T4 GPUs |
+<table align= 'center'>
+  <tr><th>Metric</th><th>Target</th><th>Notes</th></tr>
+  <tr><td>Temporal OOC F1</td><td>≈79%</td><td>Improves on COSMOS static baseline</td></tr>
+  <tr><td>Patient-Zero Accuracy@3</td><td>≈70%</td><td>Practical for fact-checking workflows</td></tr>
+  <tr><td>Generic Classifier F1</td><td>≈80%</td><td>Reduces false positives</td></tr>
+  <tr><td>Training Time</td><td>≤4 hours</td><td>Feasible on Kaggle/Colab GPUs</td></tr>
+  <tr><td>VRAM Requirement</td><td>≤8GB</td><td>Fits P100/T4 GPUs</td></tr>
+</table>
 
-</div>
+</p>
 
 ## 🚀 Installation
 
