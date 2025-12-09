@@ -15,14 +15,6 @@ dist/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# Data (don't commit large files)
-data/raw/
-data/processed/
-*.csv
-*.json
-*.pkl
-*.h5
-
 # Models (too large for git)
 models/
 *.pth
@@ -41,3 +33,6 @@ Thumbs.db
 # Secrets
 .env
 config/secrets.yaml
+
+# Data (don't commit large files)
+data/
