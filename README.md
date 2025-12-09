@@ -73,7 +73,7 @@ Caption A (t1)  → Caption B (t2) → Caption C (t3)
 ```
 
 ## 📐 High-Level Pipeline
-
+```
 +--------------------------------------------------------------------------------+
 |                               ChronoTrace System                               |
 +--------------------------------------------------------------------------------+
@@ -119,9 +119,9 @@ Caption A (t1)  → Caption B (t2) → Caption C (t3)
                                 | • Patient zero candidate(s)                     |
                                 | • Visualization-ready graph                     |
                                 +------------------------------------------------+
-
+```
 ## Detailed Pipeline Diagram (Sequential Workflow)
-
+```
 ┌──────────────────────┐
 │     Input Image (I)   │
 └─────────────┬────────┘
@@ -166,7 +166,7 @@ Caption A (t1)  → Caption B (t2) → Caption C (t3)
                           │   - Patient zero candidates                     │
                           │   - Graph visualization                         │
                           └─────────────────────────────────────────────────┘
-
+```
 ## Component Interaction Diagram
 
                    ┌─────────────────────────────┐
@@ -191,7 +191,7 @@ Caption A (t1)  → Caption B (t2) → Caption C (t3)
                               FINAL OUTPUT
 
 ## Data Flow Diagram
-
+```
 Image ───────────────► Reverse Image Search API ───────────────► Captions + URLs + Timestamps
                                  │
                                  ▼
@@ -217,7 +217,7 @@ Image ───────────────► Reverse Image Search API 
                 ┌───────────────────────────────┐
                 │ Patient Zero Identification   │
                 └───────────────────────────────┘
-
+```
 ## 🧪 Performance Targets
 
 | Metric | Target | Notes |
