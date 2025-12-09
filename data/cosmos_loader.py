@@ -324,7 +324,3 @@ if __name__ == "__main__":
     except:
         print(f"   Training captions: Check articles structure")
     
-    print("\nNext steps:")
-    print("   1. Generate triplets from captions")
-    print("   2. Train LoRA adapter")
-    print("   3. Select 500 images for temporal annotation")

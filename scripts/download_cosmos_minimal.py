@@ -20,10 +20,10 @@ class COSMOSMinimalDownloader:
         'test_images': 'images_test.zip',      # 300 MB
     }
     
-    # Optional - only if you want to visualize training samples
+    # Optional - only to visualize training samples
     OPTIONAL_FILES = {
-        'train_images': 'images_train.zip',    # 15 GB - SKIP THIS
-        'val_images': 'images_val.zip',        # 4 GB - SKIP THIS
+        'train_images': 'images_train.zip',    # 15 GB - SKIP 
+        'val_images': 'images_val.zip',        # 4 GB - SKIP 
     }
     
     def __init__(self, data_dir='data/raw'):
@@ -116,19 +116,6 @@ class COSMOSMinimalDownloader:
         print("=" * 60)
         
         self.print_usage_info()
-    
-    def print_usage_info(self):
-        """Print what you can do with minimal download"""
-        print("\n📋 What you can do with this minimal download:")
-        print("=" * 60)
-        print("✅ Train LoRA adapter (uses captions only)")
-        print("✅ Evaluate on test set (1,700 images)")
-        print("✅ Generate 50,000 training triplets")
-        print("✅ Complete entire capstone project")
-        print("\n❌ What you CAN'T do (but don't need):")
-        print("   • Visualize all 160K training images")
-        print("   • Train from scratch (you're using pre-trained)")
-        print("=" * 60)
 
 def main():
     """Main download function"""
@@ -144,8 +131,6 @@ def main():
     downloader.download_essential()
     
     print("\n✅ Setup complete! Next steps:")
-    print("   1. Run: python notebooks/01_cosmos_exploration.ipynb")
-    print("   2. Start annotating 500 images for temporal sequences")
 
 if __name__ == "__main__":
     main()
