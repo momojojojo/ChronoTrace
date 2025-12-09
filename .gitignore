@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data (don't commit large files)
+data/raw/
+data/processed/
+*.csv
+*.json
+*.pkl
+*.h5
+
+# Models (too large for git)
+models/
+*.pth
+*.bin
+*.safetensors
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+config/secrets.yaml
