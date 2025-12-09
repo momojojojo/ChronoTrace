@@ -65,55 +65,60 @@ Lightweight decision tree using 12 engineered features to identify whether an im
 - Nodes = captions retrieved from the web  
 - Edges = semantic drift + timestamp ordering  
 - Modified Dijkstra algorithm identifies earliest misleading caption  
+- Constructs a directed semantic-temporal graph:
+
+```bash
+Caption A (t1)  → Caption B (t2) → Caption C (t3)
+        (mutation edges)
+```
 
 ## 📐 High-Level Pipeline
 
 +--------------------------------------------------------------------------------+
-|                               ChronoTrace Pipeline                             |
+|                               ChronoTrace System                               |
 +--------------------------------------------------------------------------------+
 |                                                                                |
-|                           Input Image + Web Captions                           |
+|  INPUT IMAGE + Retrieved Web Captions (URLs, timestamps, metadata)             |
 |                                                                                |
 +-------------------------------------------+------------------------------------+
                                             |
                                             v
                          +------------------------------------+
                          |   Generic Image Classifier          |
-                         |   (Decision Tree, 12 Features)      |
+                         |  (Decision Tree, 12 features)       |
                          +------------------+------------------+
                                             |
                      Is Generic? -----------+----------- No
                           |                             |
                           v                             v
                 +-----------------+        +------------------------------+
-                | Skip OOC Check  |        |      LoRA Caption Encoder    |
-                | (Benign Reuse)  |        |  - Embeddings                |
-                +-----------------+        |  - Mutation Scoring          |
-                                           +---------------+--------------+
-                                                           |
-                                                           v
+                | Skip Further    |        |  LoRA Caption Encoder        |
+                | OOC Analysis    |        |  • Embeddings                |
+                | (Benign reuse)  |        |  • Mutation scoring          |
+                +-----------------+        +------------------------------+
+                                                             |
+                                                             v
                                 +------------------------------------------------+
-                                |              Temporal Graph Builder             |
-                                |     - Caption nodes                             |
-                                |     - Drift edges                               |
-                                |     - Timestamp ordering                        |
-                                +----------------------+---------------------------+
-                                                           |
-                                                           v
+                                |      Temporal Graph Constructor                 |
+                                |  • Nodes = captions                             |
+                                |  • Edges = semantic drift + time ordering       |
+                                |  • Weights = similarity + timestamp distance    |
                                 +------------------------------------------------+
-                                |            Patient Zero Detection               |
-                                |     - Modified Dijkstra algorithm               |
-                                |     - Earliest misleading caption               |
-                                +----------------------+---------------------------+
-                                                           |
-                                                           v
+                                                             |
+                                                             v
                                 +------------------------------------------------+
-                                |                    OUTPUT                       |
-                                |  - Caption Evolution Chain                      |
-                                |  - Patient Zero Candidates                      |
-                                |  - Graph Visualization                          |
+                                |       Patient Zero Identification               |
+                                | • Modified Dijkstra earliest-arrival path       |
+                                | • Detects first misleading caption              |
                                 +------------------------------------------------+
-
+                                                             |
+                                                             v
+                                +------------------------------------------------+
+                                |                  OUTPUT                         |
+                                | • Caption evolution chain                       |
+                                | • Patient zero candidate(s)                     |
+                                | • Visualization-ready graph                     |
+                                +------------------------------------------------+
 
 ## Detailed Pipeline Diagram (Sequential Workflow)
 
@@ -128,15 +133,15 @@ Lightweight decision tree using 12 engineered features to identify whether an im
               │
               ▼
 ┌──────────────────────────────────────────────────────────────┐
-│           Generic Image Classifier (Feature Extraction)       │
+│           Generic Image Classifier (Feature Extraction)      │
 └─────────────┬───────────────────────────────┬────────────────┘
               │                               │
            YES│                               │NO (Event-Specific)
               ▼                               ▼
    ┌─────────────────────┐        ┌────────────────────────────────────────┐
    │    Skip OOC Check   │        │          LoRA Caption Encoder          │
-   │    (Generic Image)  │        │   - Embeddings                          │
-   └─────────────────────┘        │   - Mutation distance scoring           │
+   │    (Generic Image)  │        │   - Embeddings                         │
+   └─────────────────────┘        │   - Mutation distance scoring          │
                                   └───────────────────┬────────────────────┘
                                                       │
                                                       ▼
@@ -165,8 +170,8 @@ Lightweight decision tree using 12 engineered features to identify whether an im
 ## Component Interaction Diagram
 
                    ┌─────────────────────────────┐
-                   │     chronotrace.lora         │
-                   │  LoRA Training / Inference   │
+                   │     chronotrace.lora        │
+                   │  LoRA Training / Inference  │
                    └───────────────┬─────────────┘
                                    │
                          Embeddings│
@@ -187,56 +192,31 @@ Lightweight decision tree using 12 engineered features to identify whether an im
 
 ## Data Flow Diagram
 
-                          ┌───────────────────────────┐
-                          │       Input Image (I)       │
-                          └───────────────┬─────────────┘
-                                          │
-                                          ▼
-                     ┌──────────────────────────────────────────┐
-                     │   Reverse Image Search / Web Retrieval   │
-                     │ Captions, URLs, Timestamps, Metadata     │
-                     └───────────────┬──────────────────────────┘
-                                     │
-                                     ▼
-                     ┌──────────────────────────────────────────┐
-                     │       Feature Extraction (Metadata)       │
-                     │  Domain diversity, caption count, etc.    │
-                     └───────────────┬──────────────────────────┘
-                                     │
-                                     ▼
-                     ┌──────────────────────────────────────────┐
-                     │        Generic Image Classifier           │
-                     │      (Decision Tree Pre-Filter)           │
-                     └───────────────┬──────────────────────────┘
-                       YES (Generic) │                 │ NO (Event-Specific)
-                                     ▼                 ▼
-                     ┌───────────────────┐     ┌────────────────────────────────┐
-                     │   Stop Pipeline   │     │      LoRA Caption Encoder       │
-                     │  (Benign Reuse)   │     │ - Embeddings                    │
-                     └───────────────────┘     │ - Mutation Scoring              │
-                                               └───────────────┬────────────────┘
-                                                               │
-                                                               ▼
-                                  ┌────────────────────────────────────────────┐
-                                  │            Temporal Graph Builder           │
-                                  │  - Nodes: captions                          │
-                                  │  - Edges: drift + timestamps                │
-                                  └───────────────┬────────────────────────────┘
-                                                  │
-                                                  ▼
-                                  ┌────────────────────────────────────────────┐
-                                  │           Patient Zero Detection            │
-                                  │ - Modified Dijkstra earliest-arrival path   │
-                                  │ - Identify earliest misleading caption       │
-                                  └───────────────┬────────────────────────────┘
-                                                  │
-                                                  ▼
-                                  ┌────────────────────────────────────────────┐
-                                  │                  OUTPUT                     │
-                                  │ - Mutation Chain                            │
-                                  │ - Patient Zero Candidates                   │
-                                  │ - Visualizable Temporal Graph               │
-                                  └────────────────────────────────────────────┘
+Image ───────────────► Reverse Image Search API ───────────────► Captions + URLs + Timestamps
+                                 │
+                                 ▼
+                   ┌────────────────────────┐
+                   │  Feature Extraction    │
+                   │  (Visual + Metadata)   │
+                   └───────────┬────────────┘
+                               ▼
+                   ┌────────────────────────┐
+                   │  Generic Classifier    │
+                   └───────────┬────────────┘
+                        Event? │
+                               ▼
+                        ┌───────────┐
+                        │   LoRA    │
+                        │ Embedding │
+                        └─────┬─────┘
+                              ▼
+                   ┌────────────────────────┐
+                   │  Temporal Graph Build  │
+                   └───────────┬────────────┘
+                              ▼
+                ┌───────────────────────────────┐
+                │ Patient Zero Identification   │
+                └───────────────────────────────┘
 
 ## 🧪 Performance Targets
 
