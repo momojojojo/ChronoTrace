@@ -219,7 +219,7 @@ Image ───────────────► Reverse Image Search API 
                 └───────────────────────────────┘
 ```
 ## 🧪 Performance Targets
-<dive align="center">
+<div style="text-align: center;">
 
 | Metric | Target | Notes |
 |--------|--------|-------|
