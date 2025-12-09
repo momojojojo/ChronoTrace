@@ -19,7 +19,7 @@ Existing systems evaluate image–caption pairs **only statically**, lacking:
 ChronoTrace addresses these gaps with a **parameter-efficient**, **explainable**, and **modular** architecture.
 
 ## 📦 Repository Structure
-
+```
 ChronoTrace/
 ├── config/
 │   └── config.yaml
@@ -48,7 +48,7 @@ ChronoTrace/
 ├── requirements.txt
 ├── setup.py
 └── README.md
-
+```
 ## ⚙️ System Architecture
 
 **1. LoRA Caption Mutation Detector**
@@ -123,7 +123,7 @@ Caption A (t1)  → Caption B (t2) → Caption C (t3)
 ## Detailed Pipeline Diagram (Sequential Workflow)
 ```
 ┌──────────────────────┐
-│     Input Image (I)   │
+│     Input Image (I)  │
 └─────────────┬────────┘
               │
               ▼
@@ -219,6 +219,7 @@ Image ───────────────► Reverse Image Search API 
                 └───────────────────────────────┘
 ```
 ## 🧪 Performance Targets
+<dive align="center">
 
 | Metric | Target | Notes |
 |--------|--------|-------|
@@ -228,6 +229,7 @@ Image ───────────────► Reverse Image Search API 
 | Training Time | ≤4 hours | Feasible on Kaggle/Colab GPUs |
 | VRAM Requirement | ≤8GB | Fits P100/T4 GPUs |
 
+</div>
 ## 🚀 Installation
 
 1. Clone and enter the project
