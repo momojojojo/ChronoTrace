@@ -45,17 +45,17 @@ ChronoTrace/
 
 ## ⚙️ System Architecture
 
-### **1. LoRA Caption Mutation Detector**
+**1. LoRA Caption Mutation Detector**
 - Fine-tunes a sentence encoder using low-rank adapters (≤0.02% trainable parameters)  
 - Detects subtle semantic drift across captions  
 - Trains within 2–4 GPU hours and fits within 8GB VRAM  
 
-### **2. Generic Image Classifier**
+**2. Generic Image Classifier**
 Lightweight decision tree using 12 engineered features to identify whether an image is:
 - **Event-specific** (should undergo OOC analysis)  
 - **Generic/stock** (naturally reused across websites)  
 
-### **3. Temporal Caption Graph & Patient-Zero Detection**
+**3. Temporal Caption Graph & Patient-Zero Detection**
 - Nodes = captions retrieved from the web  
 - Edges = semantic drift + timestamp ordering  
 - Modified Dijkstra algorithm identifies earliest misleading caption  
@@ -65,102 +65,100 @@ Lightweight decision tree using 12 engineered features to identify whether an im
 ## 📐 High-Level Pipeline
 
 +--------------------------------------------------------------------------------+
-|                               ChronoTrace System                               |
+| ChronoTrace System |
 +--------------------------------------------------------------------------------+
-|                                                                                |
-|  INPUT IMAGE + Retrieved Web Captions (URLs, timestamps, metadata)             |
-|                                                                                |
+| |
+| INPUT IMAGE + Retrieved Web Captions (URLs, timestamps, metadata) |
+| |
 +-------------------------------------------+------------------------------------+
-                                            |
-                                            v
-                         +------------------------------------+
-                         |   Generic Image Classifier          |
-                         |  (Decision Tree, 12 features)       |
-                         +------------------+------------------+
-                                            |
-                     Is Generic? -----------+----------- No
-                          |                             |
-                          v                             v
-                +-----------------+        +------------------------------+
-                | Skip Further    |        |  LoRA Caption Encoder        |
-                | OOC Analysis    |        |  • Embeddings                |
-                | (Benign reuse)  |        |  • Mutation scoring          |
-                +-----------------+        +------------------------------+
-                                                             |
-                                                             v
-                                +------------------------------------------------+
-                                |      Temporal Graph Constructor                |
-                                |  • Nodes = captions                             |
-                                |  • Edges = semantic drift + time ordering       |
-                                |  • Weights = similarity + timestamp distance    |
-                                +------------------------------------------------+
-                                                             |
-                                                             v
-                                +------------------------------------------------+
-                                |       Patient Zero Identification              |
-                                | • Modified Dijkstra earliest-arrival path       |
-                                | • Detects first misleading caption              |
-                                +------------------------------------------------+
-                                                             |
-                                                             v
-                                +------------------------------------------------+
-                                |                  OUTPUT                        |
-                                | • Caption evolution chain                       |
-                                | • Patient zero candidate(s)                     |
-                                | • Visualization-ready graph                     |
-                                +------------------------------------------------+
-
-
+|
+v
++------------------------------------+
+| Generic Image Classifier |
+| (Decision Tree, 12 features) |
++------------------+------------------+
+|
+Is Generic? -----------+----------- No
+| |
+v v
++-----------------+ +------------------------------+
+| Skip Further | | LoRA Caption Encoder |
+| OOC Analysis | | • Embeddings |
+| (Benign reuse) | | • Mutation scoring |
++-----------------+ +------------------------------+
+|
+v
++------------------------------------------------+
+| Temporal Graph Constructor |
+| • Nodes = captions |
+| • Edges = semantic drift + time ordering |
+| • Weights = similarity + timestamp distance |
++------------------------------------------------+
+|
+v
++------------------------------------------------+
+| Patient Zero Identification |
+| • Modified Dijkstra earliest-arrival path |
+| • Detects first misleading caption |
++------------------------------------------------+
+|
+v
++------------------------------------------------+
+| OUTPUT |
+| • Caption evolution chain |
+| • Patient zero candidate(s) |
+| • Visualization-ready graph |
++------------------------------------------------+
 
 ---
 
 ## Detailed Pipeline Diagram (Sequential Workflow)
 
  ┌────────────────────┐
- │   Input Image (I)   │
- └──────────┬─────────┘
-            │
-            ▼
- ┌─────────────────────────────────────────┐
- │ Retrieve Captions, URLs, Timestamps     │
- └──────────┬──────────────────────────────┘
-            │
-            ▼
- ┌─────────────────────────────────────────┐
- │  Generic Image Classifier               │
- │  (Feature Extraction + Decision Tree)   │
- └──────────┬───────────────┬─────────────┘
-            │               │
-     YES →  │               │  ← NO (Event-Specific)
-            ▼               ▼
-   ┌────────────────┐  ┌────────────────────────────────────┐
-   │ Skip OOC Check │  │      LoRA Caption Encoder          │
-   │  (Generic Use) │  │  - Embeddings                      │
-   └────────────────┘  │  - Mutation distance scoring       │
-                       └───────────┬────────────────────────┘
-                                   │
-                                   ▼
-                     ┌──────────────────────────────────────┐
-                     │       Temporal Graph Builder          │
-                     │   - Create nodes for captions         │
-                     │   - Create edges for semantic drift   │
-                     │   - Enforce timestamp ordering        │
-                     └──────────┬────────────────────────────┘
-                                │
-                                ▼
-                     ┌──────────────────────────────────────┐
-                     │     Patient Zero Detection            │
-                     │   - Modified Dijkstra algorithm       │
-                     │   - Earliest misleading caption       │
-                     └──────────┬────────────────────────────┘
-                                │
-                                ▼
-                     ┌──────────────────────────────────────┐
-                     │               OUTPUT                  │
-                     │  • Mutation chain                    │
-                     │  • Patient zero candidates           │
-                     │  • Graph visualization               │
-                     └──────────────────────────────────────┘
+│ Input Image (I) │
+└──────────┬─────────┘
+│
+▼
+┌─────────────────────────────────────────┐
+│ Retrieve Captions, URLs, Timestamps │
+└──────────┬──────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────┐
+│ Generic Image Classifier │
+│ (Feature Extraction + Decision Tree) │
+└──────────┬───────────────┬─────────────┘
+│ │
+YES → │ │ ← NO (Event-Specific)
+▼ ▼
+┌────────────────┐ ┌────────────────────────────────────┐
+│ Skip OOC Check │ │ LoRA Caption Encoder │
+│ (Generic Use) │ │ - Embeddings │
+└────────────────┘ │ - Mutation distance scoring │
+└───────────┬────────────────────────┘
+│
+▼
+┌──────────────────────────────────────┐
+│ Temporal Graph Builder │
+│ - Caption nodes │
+│ - Semantic drift edges │
+│ - Timestamp ordering │
+└──────────┬────────────────────────────┘
+│
+▼
+┌──────────────────────────────────────┐
+│ Patient Zero Detection │
+│ - Modified Dijkstra algorithm │
+│ - Earliest misleading caption │
+└──────────┬────────────────────────────┘
+│
+▼
+┌──────────────────────────────────────┐
+│ OUTPUT │
+│ • Mutation chain │
+│ • Patient zero candidates │
+│ • Graph visualization │
+└──────────────────────────────────────┘
 
 ---
 
@@ -233,20 +231,20 @@ Image ───────────────► Reverse Image Search API 
 
 ## 🚀 Installation
 
-### 1. Clone and enter the project
+1. Clone and enter the project
 ```bash
 git clone https://github.com/<your-username>/ChronoTrace.git
 cd ChronoTrace
 ```
 
-### 2. Create and activate a virtual environment
+2. Create and activate a virtual environment
 ``` bash
 python -m vvenv venv
 venv\Scripts\activate      # Windows
 source venv/bin/activate   # macOS/Linux
 ```
 
-### 3. Install dependencies
+3. Install dependencies
 ```bash
 pip install -r requirements.txt
 pip install -e .
@@ -256,22 +254,22 @@ pip install -e .
 
 ## ▶️ Usage
 
-### Run LoRA Training
+Run LoRA Training
 ```bash
 python chronotrace/lora/train.py --config config/config.yaml
 ```
 
-### Inference: Caption Mutation Scoring
+Inference: Caption Mutation Scoring
 ```bash
 python chronotrace/lora/inference.py --image path/to/image.jpg
 ```
 
-### Generic Image Classification
+Generic Image Classification
 ```bash
 from chronotrace.classifier import feature_extractor, train
 ```
 
-### Temporal Graph Construction
+Temporal Graph Construction
 ```bash
 from chronotrace.graph import builder, patient_zero
 ```
