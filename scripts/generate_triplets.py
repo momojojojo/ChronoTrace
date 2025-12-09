@@ -10,7 +10,7 @@ from tqdm import tqdm
 import sys
 sys.path.append('.')
 
-from data.cosmos_loader import load_all_captions
+from chronotrace.data.cosmos_loader import load_all_captions
 
 def paraphrase_simple(caption):
     """

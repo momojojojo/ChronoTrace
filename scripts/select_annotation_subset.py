@@ -10,7 +10,7 @@ from collections import defaultdict
 import sys
 sys.path.append('.')
 
-from data.cosmos_loader import COSMOSDataset
+from chronotrace.data.cosmos_loader import COSMOSDataset
 
 def select_500_images():
     """Select 500 diverse images for annotation"""
