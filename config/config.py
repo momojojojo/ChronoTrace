@@ -8,7 +8,6 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 SEARCH_ENGINE_ID = os.getenv("GOOGLE_SEARCH_ENGINE_ID")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # 2. Load YAML configuration (non-secret settings)
 
