@@ -32,7 +32,6 @@ Thumbs.db
 
 # Secrets
 .env
-config/secrets.yaml
 
 # Data (don't commit large files)
 data/
