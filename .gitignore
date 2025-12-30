@@ -32,7 +32,10 @@ Thumbs.db
 
 # Secrets
 .env
-config/notional-sign-481506-r3-57f0e65bf093.json
+config/google-vision-key.json
 
 # Data (don't commit large files)
 data/
+
+ANNOTATION_GUIDE.md
+ngrok.exe
